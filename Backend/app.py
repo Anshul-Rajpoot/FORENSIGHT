@@ -15,13 +15,6 @@ import cloudinary
 import cloudinary.uploader
 from werkzeug.exceptions import HTTPException
 
-from deepface import DeepFace
-
-print("Loading SFace...")
-DeepFace.build_model("SFace")
-print("SFace loaded.")
-
-
 
 def _clamp_int(value: str | None, default: int, *, min_value: int, max_value: int) -> int:
     try:
@@ -68,7 +61,7 @@ cloudinary.config(
 
 # SETTINGS (LIGHTWEIGHT)
 THRESHOLD = float(os.getenv("MATCH_THRESHOLD", "0.3"))
-MODEL = "SFace"           # lighter
+MODEL = "Facenet"           # lighter
 DETECTOR = "opencv"         # lighter
 ENFORCE = False             # avoid detection failure
 
@@ -169,7 +162,7 @@ def _handle_unexpected_error(e):
 @app.route("/warmup")
 def warmup():
     from deepface import DeepFace
-    DeepFace.build_model("SFace")
+    DeepFace.build_model("Facenet")
     return {"ok": True}
 
 def _normalize_email(email: str | None) -> str:
