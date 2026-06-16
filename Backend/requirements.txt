@@ -6,6 +6,8 @@ pillow
 numpy==1.23.5
 cloudinary
 flask-cors
+itsdangerous
+werkzeug
 
 insightface
 onnxruntime
