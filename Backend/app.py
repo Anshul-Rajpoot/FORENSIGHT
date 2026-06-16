@@ -15,6 +15,13 @@ import cloudinary
 import cloudinary.uploader
 from werkzeug.exceptions import HTTPException
 
+from deepface import DeepFace
+
+print("Loading FaceNet...")
+DeepFace.build_model("Facenet")
+print("FaceNet loaded.")
+
+
 
 def _clamp_int(value: str | None, default: int, *, min_value: int, max_value: int) -> int:
     try:
@@ -156,6 +163,12 @@ def _handle_unexpected_error(e):
 # ==============================
 # ROUTES
 # ==============================
+
+@app.route("/warmup")
+def warmup():
+    from deepface import DeepFace
+    DeepFace.build_model("Facenet")
+    return {"ok": True}
 
 def _normalize_email(email: str | None) -> str:
     return (email or "").strip().lower()
