@@ -14,7 +14,8 @@ from flask_cors import CORS
 import cloudinary
 import cloudinary.uploader
 from werkzeug.exceptions import HTTPException
-import face_recognition
+import cv2
+import insightface
 
 def _clamp_int(value: str | None, default: int, *, min_value: int, max_value: int) -> int:
     try:
@@ -107,21 +108,32 @@ def require_auth(required_role=None):
 def file_to_numpy(file_bytes):
     return np.array(Image.open(io.BytesIO(file_bytes)).convert("RGB"))
 
+import cv2
+import insightface
+
+face_app = insightface.app.FaceAnalysis(
+    providers=["CPUExecutionProvider"]
+)
+face_app.prepare(ctx_id=0)
+
 def get_embedding(file_bytes):
     try:
-        img = face_recognition.load_image_file(
-            io.BytesIO(file_bytes)
+        img = np.array(
+            Image.open(io.BytesIO(file_bytes)).convert("RGB")
         )
 
-        encodings = face_recognition.face_encodings(img)
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-        if len(encodings) == 0:
+        faces = face_app.get(img)
+
+        if len(faces) == 0:
             print("No face found")
             return None
 
-        emb = np.array(encodings[0], dtype=np.float32)
+        emb = faces[0].embedding.astype(np.float32)
 
         norm = np.linalg.norm(emb)
+
         if norm == 0:
             return None
 
@@ -131,8 +143,7 @@ def get_embedding(file_bytes):
 
     except Exception as e:
         print("Embedding error:", e)
-        return None
-        
+        return None        
 def upload_image(file_bytes):
     result = cloudinary.uploader.upload(io.BytesIO(file_bytes))
     return result["secure_url"]
