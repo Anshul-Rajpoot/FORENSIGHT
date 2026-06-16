@@ -17,9 +17,9 @@ from werkzeug.exceptions import HTTPException
 
 from deepface import DeepFace
 
-print("Loading FaceNet...")
-DeepFace.build_model("Facenet")
-print("FaceNet loaded.")
+print("Loading SFace...")
+DeepFace.build_model("SFace")
+print("SFace loaded.")
 
 
 
@@ -68,7 +68,7 @@ cloudinary.config(
 
 # SETTINGS (LIGHTWEIGHT)
 THRESHOLD = float(os.getenv("MATCH_THRESHOLD", "0.3"))
-MODEL = "Facenet"           # lighter
+MODEL = "SFace"           # lighter
 DETECTOR = "opencv"         # lighter
 ENFORCE = False             # avoid detection failure
 
@@ -121,13 +121,15 @@ def get_embedding(file_bytes):
         from deepface import DeepFace
 
         img = file_to_numpy(file_bytes)
-
+        print("Before DeepFace")
         reps = DeepFace.represent(
             img_path=img,
             model_name=MODEL,
             detector_backend=DETECTOR,
             enforce_detection=ENFORCE,
         )
+        
+        print("After DeepFace")
 
         if not reps:
             return None
@@ -167,7 +169,7 @@ def _handle_unexpected_error(e):
 @app.route("/warmup")
 def warmup():
     from deepface import DeepFace
-    DeepFace.build_model("Facenet")
+    DeepFace.build_model("SFace")
     return {"ok": True}
 
 def _normalize_email(email: str | None) -> str:
