@@ -7,5 +7,5 @@ numpy==1.23.5
 cloudinary
 flask-cors
 
-face-recognition
-dlib
+insightface
+onnxruntime
