@@ -14,7 +14,7 @@ from flask_cors import CORS
 import cloudinary
 import cloudinary.uploader
 from werkzeug.exceptions import HTTPException
-
+import face_recognition
 
 def _clamp_int(value: str | None, default: int, *, min_value: int, max_value: int) -> int:
     try:
@@ -61,9 +61,7 @@ cloudinary.config(
 
 # SETTINGS (LIGHTWEIGHT)
 THRESHOLD = float(os.getenv("MATCH_THRESHOLD", "0.3"))
-MODEL = "Facenet"           # lighter
-DETECTOR = "opencv"         # lighter
-ENFORCE = False             # avoid detection failure
+
 
 # ==============================
 # AUTH HELPERS
@@ -111,30 +109,30 @@ def file_to_numpy(file_bytes):
 
 def get_embedding(file_bytes):
     try:
-        from deepface import DeepFace
-
-        img = file_to_numpy(file_bytes)
-        print("Before DeepFace")
-        reps = DeepFace.represent(
-            img_path=img,
-            model_name=MODEL,
-            detector_backend=DETECTOR,
-            enforce_detection=ENFORCE,
+        img = face_recognition.load_image_file(
+            io.BytesIO(file_bytes)
         )
-        
-        print("After DeepFace")
 
-        if not reps:
+        encodings = face_recognition.face_encodings(img)
+
+        if len(encodings) == 0:
+            print("No face found")
             return None
 
-        emb = np.array(reps[0]["embedding"], dtype=np.float32)
-        emb = emb / np.linalg.norm(emb)
+        emb = np.array(encodings[0], dtype=np.float32)
+
+        norm = np.linalg.norm(emb)
+        if norm == 0:
+            return None
+
+        emb = emb / norm
+
         return emb.tolist()
 
     except Exception as e:
         print("Embedding error:", e)
         return None
-
+        
 def upload_image(file_bytes):
     result = cloudinary.uploader.upload(io.BytesIO(file_bytes))
     return result["secure_url"]
@@ -159,11 +157,6 @@ def _handle_unexpected_error(e):
 # ROUTES
 # ==============================
 
-@app.route("/warmup")
-def warmup():
-    from deepface import DeepFace
-    DeepFace.build_model("Facenet")
-    return {"ok": True}
 
 def _normalize_email(email: str | None) -> str:
     return (email or "").strip().lower()
