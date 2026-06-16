@@ -14,8 +14,7 @@ from flask_cors import CORS
 import cloudinary
 import cloudinary.uploader
 from werkzeug.exceptions import HTTPException
-import cv2
-import insightface
+
 
 def _clamp_int(value: str | None, default: int, *, min_value: int, max_value: int) -> int:
     try:
@@ -24,10 +23,16 @@ def _clamp_int(value: str | None, default: int, *, min_value: int, max_value: in
         return default
     return max(min_value, min(max_value, n))
 
+
 # ==============================
 # LOAD ENV
 # ==============================
 load_dotenv()
+
+
+
+
+
 
 # ==============================
 # CONFIG
@@ -62,6 +67,11 @@ cloudinary.config(
 
 # SETTINGS (LIGHTWEIGHT)
 THRESHOLD = float(os.getenv("MATCH_THRESHOLD", "0.3"))
+MODEL = "Facenet"           # lighter
+DETECTOR = "opencv"         # lighter
+ENFORCE = False             # avoid detection failure
+
+
 
 
 # ==============================
@@ -102,67 +112,40 @@ def require_auth(required_role=None):
         return wrapper
     return decorator
 
+
+
+
+
 # ==============================
 # UTILS
 # ==============================
 def file_to_numpy(file_bytes):
     return np.array(Image.open(io.BytesIO(file_bytes)).convert("RGB"))
 
-
-
-FACE_APP = None
-
-def get_face_app():
-    global FACE_APP
-
-    if FACE_APP is None:
-        print("Loading InsightFace model...")
-
-        FACE_APP = insightface.app.FaceAnalysis(
-            name="buffalo_s",
-            providers=["CPUExecutionProvider"]
-        )
-
-        FACE_APP.prepare(
-            ctx_id=-1,
-            det_size=(320, 320)
-        )
-
-        print("InsightFace loaded")
-
-    return FACE_APP
-
 def get_embedding(file_bytes):
     try:
-        face_app = get_face_app()
+        from deepface import DeepFace
 
-        img = np.array(
-            Image.open(io.BytesIO(file_bytes)).convert("RGB")
+        img = file_to_numpy(file_bytes)
+
+        reps = DeepFace.represent(
+            img_path=img,
+            model_name=MODEL,
+            detector_backend=DETECTOR,
+            enforce_detection=ENFORCE,
         )
 
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-
-        faces = face_app.get(img)
-
-        if len(faces) == 0:
-            print("No face found")
+        if not reps:
             return None
 
-        emb = faces[0].embedding.astype(np.float32)
-
-        norm = np.linalg.norm(emb)
-
-        if norm == 0:
-            return None
-
-        emb = emb / norm
-
+        emb = np.array(reps[0]["embedding"], dtype=np.float32)
+        emb = emb / np.linalg.norm(emb)
         return emb.tolist()
 
     except Exception as e:
         print("Embedding error:", e)
         return None
-        
+
 def upload_image(file_bytes):
     result = cloudinary.uploader.upload(io.BytesIO(file_bytes))
     return result["secure_url"]
@@ -176,6 +159,8 @@ def cosine_score(a, b):
     return float(np.dot(a, b) / denom)
 
 
+
+
 @app.errorhandler(Exception)
 def _handle_unexpected_error(e):
     if isinstance(e, HTTPException):
@@ -183,10 +168,15 @@ def _handle_unexpected_error(e):
     print("Unhandled error:", repr(e))
     return jsonify({"message": "Server error"}), 500
 
+
+
+
+
+
+
 # ==============================
 # ROUTES
 # ==============================
-
 
 def _normalize_email(email: str | None) -> str:
     return (email or "").strip().lower()
@@ -290,12 +280,7 @@ def upload_and_match():
         if emb is None:
             return jsonify({"error": "Face not detected"}), 400
 
-        query = {
-            "embedding": {
-                "$exists": True,
-                "$ne": None
-            }
-        }
+        query: dict = {"embedding": {"$exists": True}}
         if sex_filter:
             query["sex"] = re.compile(rf"^{re.escape(sex_filter)}$", re.IGNORECASE)
 
@@ -365,31 +350,14 @@ def enroll():
 @app.route("/api/latest-criminals", methods=["GET"])
 def latest_criminals():
     limit = _clamp_int(request.args.get("limit"), 10, min_value=1, max_value=50)
-
     try:
         criminals = list(
-    collection.aggregate([
-        {
-            "$match": {
-                "status": "NOT ARRESTED"
-            }
-        },
-        {
-            "$sample": {
-                "size": limit
-            }
-        },
-        {
-            "$project": {
-                "_id": 0,
-                "embedding": 0
-            }
-        }
-    ])
-)
-
+            collection.find(
+                {},
+                {"_id": 0, "embedding": 0},
+            ).sort("createdAt", -1).limit(limit)
+        )
         return jsonify({"criminals": criminals})
-
     except Exception as e:
         print("latest_criminals error:", e)
         return jsonify({"message": "Database not reachable"}), 503
