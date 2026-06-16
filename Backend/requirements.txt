@@ -6,9 +6,7 @@ pillow
 numpy==1.23.5
 cloudinary
 flask-cors
-itsdangerous
-werkzeug
 
-insightface
-onnxruntime
+deepface==0.0.79
 opencv-python-headless
+tensorflow==2.12.0
