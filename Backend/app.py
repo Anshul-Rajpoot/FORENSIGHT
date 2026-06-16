@@ -108,16 +108,33 @@ def require_auth(required_role=None):
 def file_to_numpy(file_bytes):
     return np.array(Image.open(io.BytesIO(file_bytes)).convert("RGB"))
 
-import cv2
-import insightface
 
-face_app = insightface.app.FaceAnalysis(
-    providers=["CPUExecutionProvider"]
-)
-face_app.prepare(ctx_id=0)
+
+FACE_APP = None
+
+def get_face_app():
+    global FACE_APP
+
+    if FACE_APP is None:
+        print("Loading InsightFace model...")
+
+        FACE_APP = insightface.app.FaceAnalysis(
+            providers=["CPUExecutionProvider"]
+        )
+
+        FACE_APP.prepare(
+            ctx_id=-1,
+            det_size=(320, 320)
+        )
+
+        print("InsightFace loaded")
+
+    return FACE_APP
 
 def get_embedding(file_bytes):
     try:
+        face_app = get_face_app()
+
         img = np.array(
             Image.open(io.BytesIO(file_bytes)).convert("RGB")
         )
@@ -143,7 +160,8 @@ def get_embedding(file_bytes):
 
     except Exception as e:
         print("Embedding error:", e)
-        return None        
+        return None
+        
 def upload_image(file_bytes):
     result = cloudinary.uploader.upload(io.BytesIO(file_bytes))
     return result["secure_url"]
@@ -271,7 +289,12 @@ def upload_and_match():
         if emb is None:
             return jsonify({"error": "Face not detected"}), 400
 
-        query: dict = {"embedding": {"$exists": True}}
+        query = {
+            "embedding": {
+                "$exists": True,
+                "$ne": None
+            }
+        }
         if sex_filter:
             query["sex"] = re.compile(rf"^{re.escape(sex_filter)}$", re.IGNORECASE)
 
