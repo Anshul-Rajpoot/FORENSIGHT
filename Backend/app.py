@@ -119,6 +119,7 @@ def get_face_app():
         print("Loading InsightFace model...")
 
         FACE_APP = insightface.app.FaceAnalysis(
+            name="buffalo_s",
             providers=["CPUExecutionProvider"]
         )
 
