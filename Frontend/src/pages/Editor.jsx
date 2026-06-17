@@ -8,6 +8,7 @@ import { useCanvas } from "../hooks/useCanvas.js";
 import { useToast } from "../hooks/useToast.js";
 import { API_BASE_URL } from "../utils/apiBase.js";
 import styles from "./Editor.module.css";
+import AiUnavailableModal from "../components/AiUnavailableModal.jsx";
 
 export default function Editor() {
   const { toasts, showToast } = useToast();
@@ -24,6 +25,7 @@ export default function Editor() {
   const [matches, setMatches] = useState([]);
   const [matchLoading, setMatchLoading] = useState(false);
   const [searchAttempted, setSearchAttempted] = useState(false);
+  const [showAiModal, setShowAiModal] = useState(false);
 
   const {
     canvasRef,
@@ -87,10 +89,7 @@ export default function Editor() {
         data = {};
       }
       if (!res.ok) {
-        showToast(
-          data.error || data.message || `Upload failed (HTTP ${res.status})`,
-          "warning",
-        );
+        setShowAiModal(true);
         return;
       }
 
@@ -102,7 +101,8 @@ export default function Editor() {
         sorted.length ? "success" : "info",
       );
     } catch (e) {
-      showToast("Server error", "warning");
+        setShowAiModal(true);
+      }
     } finally {
       setMatchLoading(false);
     }
@@ -195,6 +195,11 @@ export default function Editor() {
           onSelect={selectById}
         />
       </div>
+
+      <AiUnavailableModal
+        open={showAiModal}
+        onClose={() => setShowAiModal(false)}
+      />
 
       <Toast toasts={toasts} />
     </div>
