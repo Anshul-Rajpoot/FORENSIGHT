@@ -81,11 +81,15 @@ export default function Results() {
           <div className={styles.card}>
             <h2 className={styles.cardTitle}>Matched Faces</h2>
 
-            <form className={styles.searchForm} onSubmit={runSearch}>
-              <button className={styles.primaryBtn} type="submit">
+            <div className={styles.searchForm}>
+              <button
+                className={styles.primaryBtn}
+                type="button"
+                onClick={runSearch}
+              >
                 Search
               </button>
-            </form>
+            </div>
 
             <div className={styles.resultsScroll}>
               <p className={styles.muted}>
