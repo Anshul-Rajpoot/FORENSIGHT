@@ -14,7 +14,7 @@ export default function Editor() {
   const { toasts, showToast } = useToast();
   const navigate = useNavigate();
 
-  const API_BASE = useMemo(() => API_BASE_URL, []);
+  
   const token = localStorage.getItem("token");
 
   const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
@@ -22,9 +22,7 @@ export default function Editor() {
     // Force an explicit choice at least once per session
     return sessionStorage.getItem("generatedGender") ?? "";
   });
-  const [matches, setMatches] = useState([]);
-  const [matchLoading, setMatchLoading] = useState(false);
-  const [searchAttempted, setSearchAttempted] = useState(false);
+  
   const [showAiModal, setShowAiModal] = useState(false);
 
   const {
@@ -53,80 +51,17 @@ export default function Editor() {
     showToast("Welcome to FORENSIGHT! 🎨", "info");
   }, []); // eslint-disable-line
 
-  const dataUrlToBlob = (dataUrl) => {
-    const [meta, b64] = dataUrl.split(",");
-    const mime = meta.match(/data:(.*);base64/)?.[1] || "image/png";
-    const bin = atob(b64);
-    const buf = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
-    return new Blob([buf], { type: mime });
-  };
+  
 
-  const uploadImageForMatch = async (file) => {
-  if (!file) return;
-
+  const uploadImageForMatch = async () => {
   if (!token) {
     showToast("Please login first", "warning");
     return;
   }
 
-  const formData = new FormData();
-  formData.append("image", file);
-
-  try {
-    setMatchLoading(true);
-
-    const res = await fetch(`${API_BASE}/api/upload`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-
-    let data = {};
-
-    try {
-      data = await res.json();
-    } catch {
-      data = {};
-    }
-
-    if (!res.ok) {
-      if (
-        res.status === 500 ||
-        res.status === 502 ||
-        res.status === 503
-      ) {
-        setShowAiModal(true);
-      } else {
-        showToast(
-          data.error || data.message || "Search failed.",
-          "warning"
-        );
-      }
-      return;
-    }
-
-    const sorted = (data.matches || []).sort(
-      (a, b) => b.score - a.score
-    );
-
-    setMatches(sorted);
-    setSearchAttempted(true);
-
-    showToast(
-      sorted.length
-        ? `Found ${sorted.length} match(es)`
-        : "No matches found",
-      sorted.length ? "success" : "info"
-    );
-  } catch (err) {
-    console.error(err);
-    setShowAiModal(true);
-  } finally {
-    setMatchLoading(false);
-  }
+  // Hosted demo:
+  // DeepFace inference is intentionally disabled.
+  setShowAiModal(true);
 }; 
 
   const generatePreview = () => {
@@ -163,17 +98,14 @@ export default function Editor() {
     }
   };
 
-  const uploadGeneratedForMatch = async () => {
-    if (!generatedImageUrl) {
-      showToast("Generate the image first", "warning");
-      return;
-    }
-    const blob = dataUrlToBlob(generatedImageUrl);
-    const file = new File([blob], `generated-${Date.now()}.png`, {
-      type: "image/png",
-    });
-    await uploadImageForMatch(file);
-  };
+  const uploadGeneratedForMatch = () => {
+  if (!generatedImageUrl) {
+    showToast("Generate the image first", "warning");
+    return;
+  }
+
+  uploadImageForMatch();
+};
 
   const goToUploadForm = () => {
     navigate("/upload");
@@ -200,9 +132,9 @@ export default function Editor() {
           onSearch={uploadGeneratedForMatch}
           onUploadToDatabase={goToUploadForm}
           generatedImageUrl={generatedImageUrl}
-          matches={matches}
-          searchLoading={matchLoading}
-          searchAttempted={searchAttempted}
+          matches={[]}
+          searchLoading={false}
+          searchAttempted={false}
           onRotate={setRotation}
           onMoveX={setPositionX}
           onMoveY={setPositionY}
