@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { API_BASE_URL } from "../utils/apiBase.js";
 import styles from "./Results.module.css";
+import AiUnavailableModal from "../components/AiUnavailableModal.jsx";
 
 function dataUrlToFile(dataUrl, filename) {
   const [meta, b64] = dataUrl.split(",");
@@ -32,6 +33,7 @@ export default function Results() {
   const [loading, setLoading] = useState(false);
   const [matches, setMatches] = useState([]);
   const [autoSearched, setAutoSearched] = useState(false);
+  const [showAiModal, setShowAiModal] = useState(false);
 
   useEffect(() => {
     if (location.state?.generatedImageUrl) {
@@ -83,7 +85,16 @@ export default function Results() {
         data = {};
       }
       if (!res.ok) {
-        alert(data.error || data.message || `Search failed (HTTP ${res.status})`);
+        if (
+          res.status === 500 ||
+          res.status === 502 ||
+          res.status === 503
+        ) {
+          setShowAiModal(true);
+        } else {
+          alert(data.error || data.message || `Search failed (HTTP ${res.status})`);
+        }
+      
         setMatches([]);
         return;
       }
@@ -91,19 +102,20 @@ export default function Results() {
       const sorted = (data.matches || []).sort((a, b) => b.score - a.score);
       setMatches(sorted);
     } catch (err) {
-      alert("Server error");
+      console.error(err);
+      setShowAiModal(true);
       setMatches([]);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (!autoSearched && generatedImageUrl) {
-      setAutoSearched(true);
-      runSearch();
-    }
-  }, [autoSearched, generatedImageUrl]);
+  // useEffect(() => {
+  //   if (!autoSearched && generatedImageUrl) {
+  //     setAutoSearched(true);
+  //     runSearch();
+  //   }
+  // }, [autoSearched, generatedImageUrl]);
 
   return (
     <div className={styles.page}>
@@ -175,6 +187,10 @@ export default function Results() {
           </div>
         </section>
       </div>
+      <AiUnavailableModal
+        open={showAiModal}
+        onClose={() => setShowAiModal(false)}
+/>
     </div>
   );
 }
