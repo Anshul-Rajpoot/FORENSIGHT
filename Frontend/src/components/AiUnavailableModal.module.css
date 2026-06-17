@@ -1,27 +1,85 @@
-.overlay {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: rgba(10, 10, 20, 0.72);
-  backdrop-filter: blur(8px);
-
-  z-index: 999999;
+.icon {
+  font-size: 42px;
+  text-align: center;
+  margin-bottom: 14px;
 }
 
-.modal {
-  width: min(900px, 92vw);
-  max-height: 90vh;
-  overflow-y: auto;
+.title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 14px;
+}
 
-  background: white;
-  border-radius: 22px;
-  padding: 34px;
+.description {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 28px;
+  line-height: 1.7;
+}
 
-  position: relative;
+.infoBox {
+  background: #eef2ff;
+  border-left: 5px solid #6366f1;
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 28px;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 28px;
+}
+
+.column h4 {
+  margin-bottom: 14px;
+  color: #1e293b;
+}
+
+.column ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.column li {
+  margin-bottom: 10px;
+  color: #475569;
+}
+
+.note {
+  background: #fff7ed;
+  border: 1px solid #fbbf24;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 28px;
+  color: #92400e;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.githubBtn,
+.closeBtn {
+  padding: 14px 24px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.githubBtn {
+  background: #111827;
+  color: white;
+}
+
+.closeBtn {
+  background: #6366f1;
+  color: white;
+  border: none;
 }
