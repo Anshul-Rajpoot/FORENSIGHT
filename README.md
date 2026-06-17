@@ -1,7 +1,7 @@
 # 🧠 ForenSight – Criminal Face Generation and Recognition System
 
 ## 📌 Overview
-* Live-https://forensightanshul-o0w2y2vqj-anshul-rajpoots-projects-9552e509.vercel.app/
+* https://forensight-demo.vercel.app/
 
 ForenSight is a full-stack Criminal Face Generation and Recognition System designed to assist in suspect visualization and identification. The application allows users to construct faces using modular facial components such as eyes, nose, hair, lips, and facial structure through an interactive drag-and-drop interface.
 
