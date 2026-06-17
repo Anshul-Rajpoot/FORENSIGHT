@@ -1,28 +1,26 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AssetPanel from "../components/AssetPanel.jsx";
 import CanvasArea from "../components/CanvasArea.jsx";
 import LayersPanel from "../components/LayersPanel.jsx";
 import Toast from "../components/Toast.jsx";
+import AiUnavailableModal from "../components/AiUnavailableModal.jsx";
+
 import { useCanvas } from "../hooks/useCanvas.js";
 import { useToast } from "../hooks/useToast.js";
-import { API_BASE_URL } from "../utils/apiBase.js";
+
 import styles from "./Editor.module.css";
-import AiUnavailableModal from "../components/AiUnavailableModal.jsx";
 
 export default function Editor() {
   const { toasts, showToast } = useToast();
   const navigate = useNavigate();
 
-  
-  const token = localStorage.getItem("token");
-
   const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
+
   const [gender, setGender] = useState(() => {
-    // Force an explicit choice at least once per session
     return sessionStorage.getItem("generatedGender") ?? "";
   });
-  
+
   const [showAiModal, setShowAiModal] = useState(false);
 
   const {
@@ -46,66 +44,56 @@ export default function Editor() {
     CANVAS_H,
   } = useCanvas(showToast);
 
-  // Welcome toast on mount
   useEffect(() => {
     showToast("Welcome to FORENSIGHT! 🎨", "info");
-  }, []); // eslint-disable-line
-
-  
-
-  const uploadImageForMatch = async () => {
-  if (!token) {
-    showToast("Please login first", "warning");
-    return;
-  }
-
-  // Hosted demo:
-  // DeepFace inference is intentionally disabled.
-  setShowAiModal(true);
-}; 
+  }, []);
 
   const generatePreview = () => {
     if (!canvasRef.current) return;
+
     if (elements.length === 0) {
       showToast("Add some elements first!", "warning");
       return;
     }
+
     if (!gender) {
       showToast("Please select a gender.", "warning");
       return;
     }
+
     const url = canvasRef.current.toDataURL("image/png");
+
     setGeneratedImageUrl(url);
-    setSearchAttempted(false);
-    setMatches([]);
 
     try {
       sessionStorage.setItem("generatedImageUrl", url);
       sessionStorage.setItem("generatedGender", gender);
     } catch {
-      // ignore storage failures
+      // ignore
     }
 
-    navigate("/results", { state: { generatedImageUrl: url, gender } });
+    navigate("/results", {
+      state: {
+        generatedImageUrl: url,
+        gender,
+      },
+    });
   };
 
   const onGenderChange = (nextGender) => {
     setGender(nextGender);
+
     try {
       sessionStorage.setItem("generatedGender", nextGender);
     } catch {
-      // ignore storage failures
+      // ignore
     }
   };
 
+  // Hosted demo only
   const uploadGeneratedForMatch = () => {
-  if (!generatedImageUrl) {
-    showToast("Generate the image first", "warning");
-    return;
-  }
-
-  uploadImageForMatch();
-};
+    setShowAiModal(true);
+  };
 
   const goToUploadForm = () => {
     navigate("/upload");
