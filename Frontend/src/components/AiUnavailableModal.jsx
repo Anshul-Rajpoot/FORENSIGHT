@@ -1,10 +1,10 @@
-
+import { createPortal } from "react-dom";
 import styles from "./AiUnavailableModal.module.css";
 
 export default function AiUnavailableModal({ open, onClose }) {
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <div className={styles.icon}>🤖</div>
@@ -57,9 +57,9 @@ export default function AiUnavailableModal({ open, onClose }) {
         </div>
 
         <div className={styles.note}>
-          <strong>Note:</strong> This limitation is due to the hosting platform,
-          not the application itself. Running the project locally enables the
-          complete AI pipeline.
+          <strong>Note:</strong> This limitation is due to the hosting
+          platform, not the application itself. Running the project locally
+          enables the complete AI pipeline.
         </div>
 
         <div className={styles.buttons}>
@@ -77,6 +77,7 @@ export default function AiUnavailableModal({ open, onClose }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
