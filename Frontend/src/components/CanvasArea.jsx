@@ -104,37 +104,7 @@ export default function CanvasArea({
 
 
 
-      {generatedImageUrl && (
-        <div className={styles.generated}>
-          <p className={styles.generatedTitle}>Generated Image</p>
-          <img
-            className={styles.generatedImg}
-            src={generatedImageUrl}
-            alt="Generated"
-          />
-
-          <div className={styles.generatedActions}>
-            <button
-              className={styles.actionBtn}
-              type="button"
-              onClick={onSearch}
-              disabled={searchLoading}
-            >
-              {searchLoading ? "Searching..." : "Search"}
-            </button>
-          </div>
-
-          {searchAttempted && Array.isArray(matches) && matches.length === 0 && (
-            <button
-              className={styles.uploadBtn}
-              type="button"
-              onClick={onUploadToDatabase}
-            >
-              Upload
-            </button>
-          )}
-        </div>
-      )}
+    
 
       {/* <div className={styles.transform}>
         <label className={styles.label}> Rotate </label>
