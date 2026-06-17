@@ -63,50 +63,71 @@ export default function Editor() {
   };
 
   const uploadImageForMatch = async (file) => {
-    if (!file) return;
-    if (!token) {
-      showToast("Please login first", "warning");
+  if (!file) return;
+
+  if (!token) {
+    showToast("Please login first", "warning");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  try {
+    setMatchLoading(true);
+
+    const res = await fetch(`${API_BASE}/api/upload`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    let data = {};
+
+    try {
+      data = await res.json();
+    } catch {
+      data = {};
+    }
+
+    if (!res.ok) {
+      if (
+        res.status === 500 ||
+        res.status === 502 ||
+        res.status === 503
+      ) {
+        setShowAiModal(true);
+      } else {
+        showToast(
+          data.error || data.message || "Search failed.",
+          "warning"
+        );
+      }
       return;
     }
 
-    const formData = new FormData();
-    formData.append("image", file);
+    const sorted = (data.matches || []).sort(
+      (a, b) => b.score - a.score
+    );
 
-    try {
-      setMatchLoading(true);
-      const res = await fetch(`${API_BASE}/api/upload`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
+    setMatches(sorted);
+    setSearchAttempted(true);
 
-      let data = {};
-      try {
-        data = await res.json();
-      } catch {
-        data = {};
-      }
-      if (!res.ok) {
-        setShowAiModal(true);
-        return;
-      }
-
-      const sorted = (data.matches || []).sort((a, b) => b.score - a.score);
-      setMatches(sorted);
-      setSearchAttempted(true);
-      showToast(
-        sorted.length ? `Found ${sorted.length} match(es)` : "No matches",
-        sorted.length ? "success" : "info",
-      );
-    } catch (e) {
-        setShowAiModal(true);
-      }
-    } finally {
-      setMatchLoading(false);
-    }
-  };
+    showToast(
+      sorted.length
+        ? `Found ${sorted.length} match(es)`
+        : "No matches found",
+      sorted.length ? "success" : "info"
+    );
+  } catch (err) {
+    console.error(err);
+    setShowAiModal(true);
+  } finally {
+    setMatchLoading(false);
+  }
+}; 
 
   const generatePreview = () => {
     if (!canvasRef.current) return;
@@ -198,6 +219,7 @@ export default function Editor() {
 
       <AiUnavailableModal
         open={showAiModal}
+        feature="Face Recognition"
         onClose={() => setShowAiModal(false)}
       />
 
