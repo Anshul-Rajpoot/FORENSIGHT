@@ -1,7 +1,6 @@
 .overlay {
   position: fixed;
   inset: 0;
-
   width: 100vw;
   height: 100vh;
 
@@ -9,140 +8,20 @@
   justify-content: center;
   align-items: center;
 
-  background: rgba(8, 10, 20, 0.72);
+  background: rgba(10, 10, 20, 0.72);
   backdrop-filter: blur(8px);
 
-  z-index: 99999;
+  z-index: 999999;
 }
 
 .modal {
   width: min(900px, 92vw);
   max-height: 90vh;
-
   overflow-y: auto;
 
-  background: #fff;
+  background: white;
   border-radius: 22px;
-
   padding: 34px;
 
   position: relative;
-}
-
-@keyframes popup {
-  from{
-    opacity:0;
-    transform:scale(.92);
-  }
-  to{
-    opacity:1;
-    transform:scale(1);
-  }
-}
-
-.icon{
-  font-size:60px;
-  text-align:center;
-}
-
-.title{
-  text-align:center;
-  margin-top:10px;
-  margin-bottom:12px;
-  color:#2c3e50;
-}
-
-.description{
-  text-align:center;
-  color:#555;
-  line-height:1.6;
-}
-
-.infoBox{
-  margin-top:24px;
-  background:#f4f8ff;
-  border-left:5px solid #4f46e5;
-  padding:18px;
-  border-radius:10px;
-}
-
-.infoBox h3{
-  margin-bottom:8px;
-  color:#222;
-}
-
-.infoBox p{
-  line-height:1.7;
-  color:#555;
-}
-
-.features{
-  display:flex;
-  gap:30px;
-  margin-top:25px;
-}
-
-.column{
-  flex:1;
-}
-
-.column h4{
-  margin-bottom:12px;
-  color:#1f2937;
-}
-
-.column ul{
-  padding-left:18px;
-}
-
-.column li{
-  margin:8px 0;
-  color:#444;
-}
-
-.note{
-  margin-top:25px;
-  background:#fff7e6;
-  border:1px solid #ffd591;
-  border-radius:10px;
-  padding:16px;
-  line-height:1.7;
-  color:#5c4b00;
-}
-
-.buttons{
-  display:flex;
-  justify-content:flex-end;
-  gap:15px;
-  margin-top:28px;
-}
-
-.githubBtn{
-  text-decoration:none;
-  background:#111827;
-  color:white;
-  padding:12px 22px;
-  border-radius:8px;
-  font-weight:600;
-  transition:.25s;
-}
-
-.githubBtn:hover{
-  background:#000;
-}
-
-.closeBtn{
-  background:#4f46e5;
-  color:white;
-  border:none;
-  padding:12px 22px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:15px;
-  font-weight:600;
-  transition:.25s;
-}
-
-.closeBtn:hover{
-  background:#4338ca;
 }
