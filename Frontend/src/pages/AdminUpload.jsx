@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { API_BASE_URL } from "../utils/apiBase.js";
+
 import styles from "./AdminUpload.module.css";
 import AiUnavailableModal from "../components/AiUnavailableModal.jsx";
 
@@ -19,7 +19,7 @@ export default function AdminUpload() {
 
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [loading, setLoading] = useState(false);
+
 
   const [showAiModal, setShowAiModal] = useState(false);
 
@@ -36,87 +36,25 @@ export default function AdminUpload() {
     };
   }, [preview]);
 
-  const handleUpload = async () => {
-    if (!file) {
-      alert("Please upload an image first.");
-      return;
-    }
+  const handleUpload = () => {
+  if (!file) {
+    alert("Please upload an image first.");
+    return;
+  }
 
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-    const formData = new FormData();
+  if (!token) {
+    alert("Please login first.");
+    return;
+  }
 
-    Object.entries(form).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
-    formData.append("image", file);
-
-    try {
-      setLoading(true);
-
-      const res = await fetch(`${API_BASE_URL}/api/enroll`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      let data = {};
-
-      try {
-        data = await res.json();
-      } catch {
-        data = {};
-      }
-
-      if (!res.ok) {
-        // AI model/server unavailable
-        if (
-          res.status === 500 ||
-          res.status === 502 ||
-          res.status === 503
-        ) {
-          setShowAiModal(true);
-        } else {
-          alert(data.message || data.error || "Upload failed.");
-        }
-        return;
-      }
-
-      alert("✅ Criminal Added Successfully");
-
-      setForm({
-        name: "",
-        age: "",
-        sex: "",
-        address: "",
-        height: "",
-        weight: "",
-        crime: "",
-        status: "ARRESTED",
-      });
-
-      setFile(null);
-
-      if (preview) {
-        URL.revokeObjectURL(preview);
-      }
-
-      setPreview(null);
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    } catch (err) {
-      console.error(err);
-
-      setShowAiModal(true);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Hosted Demo
+  // AI enrollment is intentionally disabled because
+  // DeepFace requires significantly more RAM than
+  // Render's free tier provides.
+  setShowAiModal(true);
+};
 
   return (
     <>
@@ -247,9 +185,8 @@ export default function AdminUpload() {
             <button
               className={styles.submit}
               onClick={handleUpload}
-              disabled={loading}
             >
-              {loading ? "Adding Criminal..." : "➕ Add Criminal"}
+              ➕ Add Criminal
             </button>
           </div>
         </div>
