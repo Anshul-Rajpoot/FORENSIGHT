@@ -1,151 +1,250 @@
-# 🧠 ForenSight – Criminal Face Generation and Recognition System
+# 🧠 ForenSight – Criminal Face Reconstruction and Recognition System
+
+<p align="center">
+  <strong>An AI-assisted forensic identification system for generating composite facial sketches and matching them against a criminal database.</strong>
+</p>
+
+---
 
 ## 📌 Overview
-* https://forensight-demo.vercel.app/
 
-ForenSight is a full-stack Criminal Face Generation and Recognition System designed to assist in suspect visualization and identification. The application allows users to construct faces using modular facial components such as eyes, nose, hair, lips, and facial structure through an interactive drag-and-drop interface.
+**ForenSight** is a full-stack forensic identification platform designed to assist law enforcement agencies in suspect identification. The application enables users to construct a suspect's face by assembling modular facial components such as face shape, eyes, nose, lips, hair, beard, and eyebrows through an interactive canvas-based editor.
 
-The generated facial composite can then be processed and compared with stored records for identification and analysis.
+Once the facial composite is generated, the system converts it into an image and compares it against a criminal database using **DeepFace facial embeddings** and **cosine similarity**, returning the most similar matches.
+
+The project combines **interactive frontend engineering**, **computer vision**, **authentication**, and **database management** into a single application.
 
 ---
 
 # 🚀 Features
 
-## 🎨 Face Construction
+## 🎨 Interactive Face Builder
 
-* Build faces using modular facial assets
-* Real-time canvas rendering
+* Create composite faces using modular facial components
+* Interactive canvas-based editor
+* Drag and reposition facial features
+* Resize facial components
 * Layer-based editing system
-* Drag-and-drop style interaction
+* Smart positioning for facial assets
+* Export generated composite as an image
 
-## 🔍 Search & Matching
+---
 
-* Search suspects by name
-* Search using uploaded images
-* Facial comparison workflow
-* Result visualization interface
+## 🔍 Face Recognition
 
-## 🖥️ Frontend Features
+* Upload generated composite for identification
+* DeepFace-based facial embedding extraction
+* FaceNet embedding generation
+* Cosine similarity-based matching
+* Ranked list of matching criminal records
 
-* Built using React + Vite
-* Responsive and interactive UI
+---
+
+## 👤 Authentication & Authorization
+
+* Secure user authentication
+* Token-based authorization
+* Password hashing
+* Role-based access control
+
+### User
+
+* Generate composite faces
+* Search criminal database
+* View matching results
+
+### Admin
+
+* Upload criminal records
+* Upload criminal images
+* Manage criminal database
+
+---
+
+## 🖥️ Frontend
+
+* React + Vite
+* Canvas API
 * Modular component architecture
-* Custom hooks for canvas and toast handling
+* Custom hooks
+* Responsive UI
+* Interactive drag-and-drop editing
 
-## ⚙️ Backend Features
+---
 
-* Python-based backend APIs
-* Authentication support
-* File upload and export handling
-* Business logic and image processing
+## ⚙️ Backend
+
+* Flask REST APIs
+* Authentication middleware
+* Criminal record management
+* Image processing pipeline
+* Face recognition workflow
+
+---
 
 ## 🗄️ Database & Storage
 
-* Stores users, assets, and results
-* Supports uploaded and generated images
-* Read/write database operations
+* MongoDB Atlas
+* Cloudinary image storage
+* Criminal records
+* User accounts
+* Facial embeddings
 
 ---
 
 # 🏗️ System Architecture
 
 ```text
-User
-  ↓
-Frontend (React + Vite)
-  ↓
-Canvas Face Builder
-  ↓
-REST API Requests
-  ↓
-Backend (Python)
-  ↓
-Face Matching Logic
-  ↓
-Database
-  ↓
-Results Display
+               User
+                 │
+                 ▼
+      React Frontend (Vite)
+                 │
+                 ▼
+     Canvas Face Reconstruction
+                 │
+                 ▼
+        Flask REST API
+        ┌────────┴─────────┐
+        ▼                  ▼
+ DeepFace (FaceNet)     MongoDB
+        │                  │
+        ▼                  │
+ Facial Embeddings         │
+        │                  │
+        └──────► Cosine Similarity ◄──────┘
+                 │
+                 ▼
+          Matching Results
 ```
 
 ---
 
-# 🧰 Tech Stack
+# 🔄 Recognition Workflow
+
+```text
+Witness Description
+          │
+          ▼
+Composite Face Generation
+          │
+          ▼
+Canvas Export (PNG)
+          │
+          ▼
+DeepFace Embedding Extraction
+          │
+          ▼
+Cosine Similarity Comparison
+          │
+          ▼
+Criminal Database Search
+          │
+          ▼
+Top Matching Suspects
+```
+
+---
+
+# 🛠️ Tech Stack
 
 ## Frontend
 
 * React.js
 * Vite
-* CSS Modules
 * JavaScript
+* CSS Modules
+* HTML5 Canvas API
 
-## Backend
+### Backend
 
 * Python
-* Flask (API handling)
+* Flask
 
-## Database
+### Database
 
-* SQLite / Database Storage
+* MongoDB Atlas
 
-## AI & Enhancement (Planned)
+### AI / Computer Vision
 
-* Hugging Face Models
-* Stable Diffusion
-* Face Enhancement Models
+* DeepFace
+* FaceNet
+* OpenCV
+* NumPy
+
+### Storage
+
+* Cloudinary
+
+### Authentication
+
+* itsdangerous (Signed Token Authentication)
+* Werkzeug Password Hashing
 
 ---
 
 # 📂 Project Structure
 
 ```text
-project/
-├─ Backend/
-│  ├─ .env
-│  ├─ app.py
-│  ├─ db_inspect.py
+ForenSight/
 │
-└─ Frontend/
-   ├─ public/assets/
-   ├─ src/components/
-   ├─ src/pages/
-   ├─ src/hooks/
-   ├─ src/utils/
-   ├─ App.jsx
-   └─ main.jsx
+├── Backend/
+│   ├── app.py
+│   ├── models/
+│   ├── routes/
+│   ├── utils/
+│   ├── uploads/
+│   ├── requirements.txt
+│   └── .env
+│
+├── Frontend/
+│   ├── public/
+│   │   └── assets/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── utils/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   └── package.json
+│
+└── README.md
 ```
 
 ---
 
-# 📸 Facial Assets
+# 🎭 Facial Components
 
-The system uses categorized facial assets:
+The composite sketch is generated using categorized facial assets:
 
 * Face Shapes
+* Hair
 * Eyes
 * Eyebrows
 * Nose
 * Lips
-* Hair
 * Beard
 * Moustache
-* Ears
+* Left Ear
+* Right Ear
 
-These assets are layered dynamically to generate composite faces.
+Each component is added as an independent canvas layer, allowing users to move, resize, replace, and reorder individual features.
 
 ---
 
-# ⚡ Installation & Setup
+# ⚙️ Installation
 
-## 1️⃣ Clone Repository
+## Clone Repository
 
 ```bash
 git clone <repository-url>
-cd project
+cd ForenSight
 ```
 
 ---
 
-## 2️⃣ Frontend Setup
+## Frontend
 
 ```bash
 cd Frontend
@@ -153,7 +252,7 @@ npm install
 npm run dev
 ```
 
-Frontend runs on:
+Runs on:
 
 ```text
 http://localhost:5173
@@ -161,7 +260,7 @@ http://localhost:5173
 
 ---
 
-## 3️⃣ Backend Setup
+## Backend
 
 ```bash
 cd Backend
@@ -169,7 +268,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Backend runs on:
+Runs on:
 
 ```text
 http://localhost:5000
@@ -179,37 +278,16 @@ http://localhost:5000
 
 # 🔐 Environment Variables
 
-Create a `.env` file inside the Backend folder.
+Create a `.env` file inside the Backend directory.
 
 ```env
-HF_TOKEN=hf_xxxxxxxxxxxxxxxxx
-HF_MODEL_ID=runwayml/stable-diffusion-v1-5
-HF_PROVIDER=hf-inference
-```
+SECRET_KEY=your_secret_key
 
----
+MONGODB_URI=your_mongodb_connection_string
 
-# 🤖 AI Integration (Future Enhancement)
-
-The project is planned to integrate Hugging Face diffusion models to:
-
-* Convert composite faces into realistic images
-* Improve visual quality
-* Enhance facial matching accuracy
-* Support AI-based face generation
-
-### Proposed Pipeline
-
-```text
-Generated Face
-      ↓
-AI Enhancement Model
-      ↓
-Realistic Face Output
-      ↓
-Face Embedding Extraction
-      ↓
-Database Comparison
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 ---
@@ -217,48 +295,52 @@ Database Comparison
 # 🎯 Use Cases
 
 * Criminal investigation assistance
-* Digital suspect sketching
-* Face visualization systems
-* Educational and research purposes
+* Digital forensic sketch generation
+* Suspect visualization
+* Criminal database search
+* Educational demonstrations
+* Research in face recognition systems
 
 ---
 
-# ⚠️ Limitations
+# ⚠️ Current Limitations
 
-* Asset-based face generation
-* Limited realism in current version
-* Matching accuracy depends on feature quality
-* AI enhancement integration under development
-
----
-
-# 🚀 Future Scope
-
-* AI-based realistic face generation
-* FaceNet embedding comparison
-* Drag, resize, and rotate facial components
-* Better blending and rendering
-* Cloud database integration
-* Advanced face recognition models
+* Composite quality depends on available facial assets.
+* Recognition accuracy is influenced by sketch quality.
+* Current similarity search performs comparisons against stored embeddings sequentially, making it suitable for small to medium-sized datasets.
 
 ---
 
-# 👨‍💻 Contributors
+# 🚀 Future Improvements
 
-* Anshul Rajpoot
+* Faster vector search using FAISS
+* Improved facial asset library
+* Automatic face alignment
+* Better sketch realism
+* Confidence threshold for match filtering
+* Enhanced administrative dashboard
 
 ---
 
-# 📄 License
+# 👨‍💻 Author
+
+**Anshul Rajpoot**
+
+---
+
+# 📜 License
 
 This project is developed for educational and research purposes.
 
 ---
 
-# 🙌 Acknowledgements
+# 🙏 Acknowledgements
 
-* React.js
+* React
 * Vite
-* Python
-* Hugging Face
-* Open Source Community
+* Flask
+* MongoDB Atlas
+* DeepFace
+* FaceNet
+* Cloudinary
+* OpenCV
