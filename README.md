@@ -238,7 +238,7 @@ Each component is added as an independent canvas layer, allowing users to move, 
 ## Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Anshul-Rajpoot/FORENSIGHT---Criminal-Face-Generation-and-Recognition-System.git
 cd ForenSight
 ```
 
