@@ -169,7 +169,6 @@ Top Matching Suspects
 
 * DeepFace
 * FaceNet
-* OpenCV
 * NumPy
 
 ### Storage
@@ -325,4 +324,4 @@ CLOUDINARY_API_SECRET=your_api_secret
 # 👨‍💻 Author
 
 **Anshul Rajpoot**
-OpenCV
+
