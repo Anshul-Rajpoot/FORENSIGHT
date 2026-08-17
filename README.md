@@ -325,22 +325,4 @@ CLOUDINARY_API_SECRET=your_api_secret
 # 👨‍💻 Author
 
 **Anshul Rajpoot**
-
----
-
-# 📜 License
-
-This project is developed for educational and research purposes.
-
----
-
-# 🙏 Acknowledgements
-
-* React
-* Vite
-* Flask
-* MongoDB Atlas
-* DeepFace
-* FaceNet
-* Cloudinary
-* OpenCV
+OpenCV
