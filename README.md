@@ -3,6 +3,7 @@
 <p align="center">
   <strong>An AI-assisted forensic identification system for generating composite facial sketches and matching them against a criminal database.</strong>
 </p>
+<img width="1380" height="794" alt="image" src="https://github.com/user-attachments/assets/c748b74b-dcf4-4729-9cd1-9d0e79b45dee" />
 
 ---
 
