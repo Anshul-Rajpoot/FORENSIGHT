@@ -1,0 +1,29 @@
+<%- include('partials/layout-top', {title:'FORENSIGHT - Add Criminal'}) %>
+<link rel="stylesheet" href="/css/AdminUpload.module.css" />
+<%- include('partials/header') %>
+<main class="shell admin-page-scope"><div class="main"><div class="workArea">
+<div class="page"><div class="container">
+  <div class="leftPanel"><img id="preview" alt="preview" class="previewImgLarge" style="display:none" /><div id="previewPlaceholder" class="previewPlaceholder">📸 Upload Image to Preview</div></div>
+  <div class="rightPanel"><h2 class="title">🚨 Add Criminal</h2>
+    <form id="enrollForm">
+      <div class="grid">
+        <input class="input" name="name" placeholder="Name" required />
+        <input class="input" name="age" type="number" placeholder="Age" required />
+        <select class="select" name="sex"><option value="">Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
+        <input class="input" name="address" placeholder="Address" />
+        <input class="input" name="height" type="number" placeholder="Height (cm)" />
+        <input class="input" name="weight" type="number" placeholder="Weight (kg)" />
+        <input class="input" name="crime" placeholder="Crime" required />
+      </div>
+      <div class="status"><button type="button" class="activeBtn statusBtn" data-status="ARRESTED">Arrested</button><button type="button" class="btn statusBtn" data-status="NOT ARRESTED">Not Arrested</button></div>
+      <input id="criminalImage" class="fileInput" type="file" accept=".jpg,.jpeg,.png" required />
+      <input type="hidden" name="status" id="status" value="ARRESTED" />
+      <button class="submit" type="submit" id="submitBtn">➕ Add Criminal</button>
+      <p id="uploadStatus" style="margin-top:12px;text-align:center"></p>
+    </form>
+  </div>
+</div></div>
+</div></div></main>
+<%- include('partials/footer') %>
+<script src="/js/common.js"></script><script src="/js/admin-upload.js"></script>
+<%- include('partials/layout-bottom') %>

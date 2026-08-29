@@ -1,0 +1,12 @@
+<%- include('partials/layout-top', {title:'FORENSIGHT - Results'}) %>
+<link rel="stylesheet" href="/css/Results.module.css" />
+<%- include('partials/header') %>
+<main class="shell results-page-scope"><div class="main"><div class="workArea">
+<div class="page"><div class="layout">
+  <section class="left"><div class="card"><h2 class="cardTitle">Generated Image</h2><img id="generatedImage" class="generatedImg" alt="Generated" style="display:none" /><p id="noGenerated" class="muted">No generated image yet.</p></div></section>
+  <section class="right"><div class="card"><h2 class="cardTitle">Matched Faces</h2><button id="searchBtn" class="primaryBtn" type="button">Search</button><div class="resultsScroll"><div id="resultsGrid" class="resultsGrid"></div><p id="resultsStatus" class="muted">Generate an image to search.</p></div></div></section>
+</div></div>
+</div></div></main>
+<%- include('partials/footer') %>
+<script src="/js/common.js"></script><script src="/js/results.js"></script>
+<%- include('partials/layout-bottom') %>

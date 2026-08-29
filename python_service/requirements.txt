@@ -1,0 +1,5 @@
+deepface==0.0.79
+numpy==1.23.5
+Pillow
+opencv-python-headless
+tensorflow==2.12.0

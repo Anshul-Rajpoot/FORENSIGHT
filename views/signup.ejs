@@ -1,0 +1,30 @@
+<%- include('partials/layout-top', {title:'FORENSIGHT - Signup'}) %>
+<link rel="stylesheet" href="/css/auth.css" />
+<div class="auth-page">
+  <div class="auth-left">
+    <img src="/assets/logo.png" class="auth-logo" alt="logo" />
+    <h1 class="auth-brand">FORENSIGHT</h1>
+    <p class="auth-tagline">Create account to access Criminal Face Generation and Recognition</p>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2 class="auth-title">Create Account</h2>
+      <p class="auth-subtitle">Join the system</p>
+      <form action="/api/auth/signup" method="POST" class="auth-form" id="signupForm">
+        <input class="auth-input" name="name" placeholder="Full Name" required />
+        <input class="auth-input" name="email" type="email" placeholder="Email" required />
+        <input class="auth-input" name="password" type="password" placeholder="Password" required />
+        <select class="auth-input" name="role" id="role" onchange="toggleAdminSecret()">
+          <option value="NORMAL">Normal User</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+        <input class="auth-input" id="adminSecret" name="adminSecret" placeholder="Admin Secret Key" style="display:none" />
+        <button class="auth-button" type="submit">Signup</button>
+      </form>
+      <% if (typeof queryError !== 'undefined' && queryError) { %><p class="auth-error"><%= queryError %></p><% } %>
+      <p class="auth-footer">Already have an account? <a class="auth-link" href="/login">Login</a></p>
+    </div>
+  </div>
+</div>
+<script>function toggleAdminSecret(){const role=document.getElementById('role').value;const el=document.getElementById('adminSecret');el.style.display=role==='ADMIN'?'block':'none';el.required=role==='ADMIN';}</script>
+<%- include('partials/layout-bottom') %>

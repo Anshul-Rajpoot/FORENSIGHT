@@ -1,0 +1,13 @@
+<%- include('partials/layout-top', {title:'FORENSIGHT - Members'}) %>
+<link rel="stylesheet" href="/css/Members.module.css" />
+<%- include('partials/header') %>
+<main class="shell members-page-scope"><div class="main"><div class="workArea">
+<div class="page"><div class="card">
+  <div class="headerRow"><h2 class="title">Members</h2><div class="subtitle">Showing results for: <span class="pill" id="searchName">-</span><span class="pill" id="searchSex" style="display:none"></span></div></div>
+  <p class="muted" id="membersStatus">Searching...</p>
+  <div class="resultsScroll"><div class="grid" id="membersGrid"></div></div>
+</div></div>
+</div></div></main>
+<%- include('partials/footer') %>
+<script src="/js/common.js"></script><script src="/js/members.js"></script>
+<%- include('partials/layout-bottom') %>

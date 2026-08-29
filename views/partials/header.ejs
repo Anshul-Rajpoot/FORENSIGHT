@@ -1,0 +1,43 @@
+<header class="app-header-scope header" id="app-header" ondblclick="toggleFullscreen()">
+  <div class="inner">
+    <a href="/" class="left brandLink" aria-label="Go to home">
+      <img src="/assets/logo.png" class="logo" alt="FORENSIGHT Logo" />
+      <h1 class="title">FORENSIGHT</h1>
+    </a>
+
+    <% if (currentUser) { %>
+      <form class="search" action="/members" method="GET">
+        <input class="searchInput" name="name" placeholder="Search member by name" required />
+        <select class="searchSelect" name="sex" aria-label="Sex">
+          <option value="">Any</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+        <button class="searchBtn" type="submit">Search</button>
+      </form>
+    <% } else { %>
+      <div></div>
+    <% } %>
+
+    <div class="actions">
+      <a class="actionBtn" href="<%= currentUser ? '/app' : '/login' %>">Generate Image</a>
+      <% if (currentUser) { %>
+        <button type="button" class="actionBtn" onclick="document.getElementById('headerImageInput').click()">Search Image</button>
+        <% if (currentUser.role === 'ADMIN') { %>
+          <a class="actionBtn" href="/upload">Upload Image</a>
+        <% } %>
+        <form action="/api/auth/logout" method="POST" class="inlineForm">
+          <button type="submit" class="actionBtn">Logout</button>
+        </form>
+      <% } else { %>
+        <a class="actionBtn" href="/login">Login</a>
+        <a class="actionBtn" href="/signup">Signup</a>
+      <% } %>
+    </div>
+
+    <% if (currentUser) { %>
+      <input id="headerImageInput" type="file" accept="image/*" hidden />
+    <% } %>
+  </div>
+</header>
