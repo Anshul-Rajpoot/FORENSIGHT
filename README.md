@@ -530,66 +530,7 @@ ForenSight can be used for:
 
 ---
 
-# ⚠️ Current Limitations
 
-- Composite quality depends on the available facial assets.
-- Recognition performance depends heavily on the quality and realism of the generated composite.
-- Face recognition models are primarily designed for photographs, so generated composite sketches may produce lower-quality matches.
-- Similarity search currently compares embeddings sequentially, making it more suitable for small to medium-sized datasets.
-- The system is intended as an **assistance tool**, not as a standalone method for identifying a suspect.
-- DeepFace/TensorFlow requires a compatible Python environment and can require significant computational resources.
-
----
-
-# 🚀 Future Improvements
-
-Possible future improvements include:
-
-- Faster vector search using FAISS
-- Improved facial asset library
-- Automatic face alignment
-- Better composite realism
-- Improved face preprocessing
-- Confidence-based match filtering
-- Vector database integration
-- Enhanced administrative dashboard
-- Pagination for large criminal databases
-- GPU acceleration for faster embedding generation
-- Better handling of composite/sketch-style faces
-
----
-
-# 📊 Performance
-
-The system's performance depends on the hardware, image quality, database size, and face-recognition model.
-
-The main factors affecting performance are:
-
-- Face detection time
-- Embedding generation time
-- Number of stored criminal records
-- Database query time
-- Image upload/download time
-- Python service response time
-
-For larger datasets, vector-search techniques such as **FAISS** can be introduced to avoid sequential comparison of every stored embedding.
-
----
-
-# 🔒 Security Considerations
-
-The application includes basic security mechanisms such as:
-
-- Password hashing using bcrypt
-- Session-based authentication
-- Role-based authorization
-- Environment variables for sensitive credentials
-- Restricted administrative functionality
-- Cloudinary-based image storage
-
-Sensitive configuration values such as database credentials, Cloudinary keys, and session secrets should never be committed to the repository.
-
----
 
 # 👨‍💻 Author
 
@@ -600,28 +541,3 @@ Maulana Azad National Institute of Technology (MANIT), Bhopal
 
 ---
 
-# ⭐ Project Highlights
-
-ForenSight demonstrates the integration of several technologies into a single full-stack application:
-
-```text
-Frontend
-   ↓
-EJS + HTML + CSS + JavaScript
-   ↓
-Node.js + Express
-   ↓
-MongoDB + Cloudinary
-   ↓
-Python Face Service
-   ↓
-DeepFace + FaceNet
-   ↓
-Facial Embeddings
-   ↓
-Cosine Similarity
-   ↓
-Matching Criminal Records
-```
-
-The project focuses on building a practical understanding of **full-stack development, computer vision, facial embeddings, database management, and authentication** in a single application.
